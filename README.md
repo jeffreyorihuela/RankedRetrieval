@@ -15,4 +15,3 @@ Pasos para correr el proyecto:
 4. Por último levantamos un servidor donde el endpoint principal se encarga de recibir un request. Dicho request será vectorizado de la misma forma que hemos hecho con los anteriores tweets. De esta forma podemos usar *similitud de cosenos* y dar como response el tweet más similar.
 
 
-![alt text](https://github.com/jeffreyorihuela/RankedRetrieval/blob/main/my-app/public/img1.png)
