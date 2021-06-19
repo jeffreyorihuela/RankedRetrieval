@@ -6,8 +6,9 @@ from nltk.stem import SnowballStemmer
 
 class Block:
     entries = []
-    def __init__(self, size):
+    def __init__(self, size, name):
         self.size = size
+        self.name = name
 
     def add(self, term_id, doc_id):
         pair = (term_id, doc_id)
@@ -16,19 +17,25 @@ class Block:
     def is_full(self):
         return len(self.entries) >= self.size
     
-
+    def save_block(self):
+        self.entries.sort(key = lambda tup: tup[0])
+        new_file = open("blocks/"+self.name+".txt", "w")
+        for pair in self.entries:
+            new_file.write(pair[0]+","+pair[1]+"\n")
+        new_file.close()
 
 class BlockedSortedBasedIndex:
 
     folder_path = ""
-    blocks = []
+    blocks = 0
     mystopwords = stopwords.words('spanish')
     stemmer = SnowballStemmer('spanish')
     doc_name = ""
 
     def __init__(self, folder_path):
         self.folder_path = folder_path
-        self.block = Block(5000)
+        self.blocks += 1
+        self.block = Block(15000, str(self.blocks))
         self.mystopwords.append("https")
 
     def construction(self):
@@ -56,8 +63,10 @@ class BlockedSortedBasedIndex:
                     token = self.stemmer.stem(token)
                     if self.block.is_full():
                         #guardar bloque en disco
+                        self.block.save_block()
+                        self.blocks += 1
                         #crear nuevo bloque
-                        print("TODO")
+                        self.block = Block(15000, str(self.blocks))
                     else:
                         self.block.add(token, self.doc_name+":"+str(tweet['id']))
 
