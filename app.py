@@ -34,7 +34,7 @@ def words():
 
 @app.route('/', methods=['POST'])
 @cross_origin()
-def index():
+def indexing():
     
     if not request.json or not 'search' in request.json:
         abort(400)

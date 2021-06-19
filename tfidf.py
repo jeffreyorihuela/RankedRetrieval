@@ -7,6 +7,9 @@ from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 
 
+#TF frecuencia del termino en un documento log ( 1 + TF)
+#IDF  log (total de documentos / frecuencia en coleccion)
+
 def make_vectors(total_tweet):
 
     words = {}
