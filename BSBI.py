@@ -3,12 +3,14 @@ import os
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
+import time
 
 class Block:
     entries = []
     def __init__(self, size, name):
         self.size = size
         self.name = name
+        self.entries = []
 
     def add(self, term_id, doc_id):
         pair = (term_id, doc_id)
@@ -31,22 +33,27 @@ class BlockedSortedBasedIndex:
     mystopwords = stopwords.words('spanish')
     stemmer = SnowballStemmer('spanish')
     doc_name = ""
+    size_block = 7000
 
     def __init__(self, folder_path):
         self.folder_path = folder_path
         self.blocks += 1
-        self.block = Block(15000, str(self.blocks))
+        self.block = Block(self.size_block, str(self.blocks))
         self.mystopwords.append("https")
 
     def construction(self):
+        start = time.time()
         with os.scandir(self.folder_path) as documents:
             for doc in documents:
                 self.doc_name = doc.name
+                print(doc.name)
                 with open(self.folder_path+doc.name, "r", encoding="UTF-8") as file:
                     self.indexing(file)
+        end = time.time()
+        print(end-start)
 
-    #def mergeBlocks():
-        
+    def mergeBlocks(self):
+        s=0
 
     def indexing(self, file):
         text = file.read()
@@ -55,7 +62,11 @@ class BlockedSortedBasedIndex:
         
 
     def work_tweets(self, json_text):
+        count = 0
         for tweet in json_text:
+            count+=1
+            if tweet["retweeted"] == True:
+                continue
             tokens = self.tokenize(tweet)
             for token in tokens:
                 token = token.lower()
@@ -66,15 +77,12 @@ class BlockedSortedBasedIndex:
                         self.block.save_block()
                         self.blocks += 1
                         #crear nuevo bloque
-                        self.block = Block(15000, str(self.blocks))
+                        self.block = Block(self.size_block, str(self.blocks))
                     else:
                         self.block.add(token, self.doc_name+":"+str(tweet['id']))
 
     def tokenize(self, tweet):
-        if tweet["retweeted"] == True:
-            tokenized = nltk.word_tokenize(tweet["RT_text"], "spanish")
-        else :
-            tokenized = nltk.word_tokenize(tweet["text"], "spanish")
+        tokenized = nltk.word_tokenize(tweet["text"], "spanish")
         return [word for word in tokenized if word.isalpha()]
 
                             
