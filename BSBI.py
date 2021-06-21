@@ -34,6 +34,7 @@ class BlockedSortedBasedIndex:
     stemmer = SnowballStemmer('spanish')
     doc_name = ""
     size_block = 7000
+    total_tweets = 0
 
     def __init__(self, folder_path):
         self.folder_path = folder_path
@@ -48,6 +49,9 @@ class BlockedSortedBasedIndex:
                 print(doc.name)
                 with open(self.folder_path+doc.name, "r", encoding="UTF-8") as file:
                     self.indexing(file)
+        file = open('totaltweets.txt', 'w')
+        file.write(str(self.total_tweets))
+        file.close()
                     
     def merge_blocks(self):
         merged = 0
@@ -108,6 +112,7 @@ class BlockedSortedBasedIndex:
         for tweet in json_text:
             if tweet["retweeted"] == True:
                 continue
+            self.total_tweets += 1
             tokens = self.tokenize(tweet)
             for token in tokens:
                 token = token.lower()
