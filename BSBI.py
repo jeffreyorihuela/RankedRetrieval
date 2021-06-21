@@ -42,16 +42,13 @@ class BlockedSortedBasedIndex:
         self.mystopwords.append("https")
 
     def construction(self):
-        start = time.time()
         with os.scandir(self.folder_path) as documents:
             for doc in documents:
                 self.doc_name = doc.name
                 print(doc.name)
                 with open(self.folder_path+doc.name, "r", encoding="UTF-8") as file:
                     self.indexing(file)
-        end = time.time()
-        print(end-start)
-
+                    
     def merge_blocks(self):
         merged = 0
         path = 'blocks/'
