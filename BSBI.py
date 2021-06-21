@@ -52,8 +52,19 @@ class BlockedSortedBasedIndex:
         end = time.time()
         print(end-start)
 
-    def mergeBlocks(self):
-        s=0
+    def merge_blocks(self):
+        merged = 0
+        path = 'blocks/'
+        files = os.listdir(path)
+        while len(files) > 1:
+            for i in range(0, int(len(files) / 2)):
+                os.remove(path+files[i*2])
+                os.remove(path+files[i*2+1])
+                merged+=1
+                new_file = open(path+'file'+str(merged)+'.txt', 'w')
+                new_file.write('ga')
+                new_file.close()
+            files = os.listdir(path)
 
     def indexing(self, file):
         text = file.read()
@@ -62,9 +73,7 @@ class BlockedSortedBasedIndex:
         
 
     def work_tweets(self, json_text):
-        count = 0
         for tweet in json_text:
-            count+=1
             if tweet["retweeted"] == True:
                 continue
             tokens = self.tokenize(tweet)
@@ -80,6 +89,7 @@ class BlockedSortedBasedIndex:
                         self.block = Block(self.size_block, str(self.blocks))
                     else:
                         self.block.add(token, self.doc_name+":"+str(tweet['id']))
+        self.block.save_block()
 
     def tokenize(self, tweet):
         tokenized = nltk.word_tokenize(tweet["text"], "spanish")
@@ -88,3 +98,4 @@ class BlockedSortedBasedIndex:
                             
 bsbi = BlockedSortedBasedIndex("data/")
 bsbi.construction()
+bsbi.merge_blocks()
