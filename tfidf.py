@@ -49,5 +49,4 @@ def tf_idf():
             line = f.readline()
         tf_file.close()
 
-tf_idf()
 

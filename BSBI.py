@@ -131,8 +131,3 @@ class BlockedSortedBasedIndex:
     def tokenize(self, tweet):
         tokenized = nltk.word_tokenize(tweet["text"], "spanish")
         return [word for word in tokenized if word.isalpha()]
-
-                            
-bsbi = BlockedSortedBasedIndex("data/")
-bsbi.construction()
-bsbi.merge_blocks()
