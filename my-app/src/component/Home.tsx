@@ -4,18 +4,17 @@ import { Box, Input, Button, Tag } from "@chakra-ui/react";
 const Home = () => {
     
     const [tweet, setTweet] = React.useState("");
-    const [result, setResult] = React.useState("");
-    const [tags, setTags] = React.useState<string[]>([]);
+    const [result, setResult] = React.useState([]);
 
     React.useEffect(() => {
-        fetch('http://localhost:5000/')
-        .then(response =>  response.json())
-        .then((result) => {
-            setTags(Object.keys(result))
-        })
-        .catch(e => {
-            console.log("ERROR ", e);
-        })
+        // fetch('http://localhost:5000/')
+        // .then(response =>  response.json())
+        // .then((result) => {
+        //     setTags(Object.keys(result))
+        // })
+        // .catch(e => {
+        //     console.log("ERROR ", e);
+        // })
     }, [])
 
     const searchTweet = () => {
@@ -29,7 +28,8 @@ const Home = () => {
         })
         .then(response =>  response.json())
         .then((result) => {
-            setResult(result['tweet'])
+            console.log(result)
+            setResult(result)
         })
         .catch(e => {
             console.log("ERROR ", e);
@@ -42,19 +42,13 @@ const Home = () => {
         <Button colorScheme="blue" onClick={searchTweet}>Buscar Tweet</Button>
     </Box>
     <br/>
-    <Box>
-        <p>Palabras que pueden ayudarte a encontrar lo que buscas:</p>
-    {
-        tags.map(tag => <Tag>{tag}</Tag> )
-    }
-    </Box>
-    
     <br/>
     {
-        result && 
-        <Box>
-            {result}
-        </Box>
+        result && result.map((tweet, idx) => 
+        <Box key={idx}>
+            <b>{idx+1}</b>. {tweet}
+        </Box>)
+        
     }
   </Box>
 }

@@ -16,22 +16,41 @@ from flask import abort
 from flask import jsonify
 
 
-bsbi = BlockedSortedBasedIndex("data/")
-bsbi.construction()
-bsbi.merge_blocks()
-tf_idf()
+# bsbi = BlockedSortedBasedIndex("data/")
+# bsbi.construction()
+# bsbi.merge_blocks()
+# tf_idf()
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
-@cross_origin()
-def words():
-    words = {}
-    with open("mostfrequentwords.json", "r", encoding="UTF-8") as file:
-        text = file.read()
-        words = json.loads(text)
+# @app.route('/', methods=['GET'])
+# @cross_origin()
+# def words():
+#     words = {}
+#     with open("mostfrequentwords.json", "r", encoding="UTF-8") as file:
+#         text = file.read()
+#         words = json.loads(text)
 
-    return words
+#     return words
+
+def get_tweets(scores):
+    tweets = []
+    for key in scores:
+        data = key.split(':')
+        print(data)
+        file_name = data[0]
+        tweet_id = data[1]
+        nfile = open("data/"+file_name, "r")
+        txt = nfile.read()
+        txt_json = json.loads(txt)
+        for tweet in txt_json:
+            if tweet["retweeted"] == True or str(tweet["id"]) != tweet_id:
+                continue
+            print(tweet["text"])
+            tweets.append(tweet["text"])
+        nfile.close()
+    return tweets
+
 
 @app.route('/', methods=['POST'])
 @cross_origin()
@@ -86,8 +105,9 @@ def indexing():
             line = file.readline()
 
     scores = dict(sorted(scores.items(), key=lambda item: item[1]))
+    
     if len(scores) <= 5:
-        return jsonify(scores)
+        return jsonify(get_tweets(scores))
     else:
-        return jsonify(dict(list(scores.items())[-5:]))
+        return jsonify(get_tweets(dict(list(scores.items())[-5:])))
     
