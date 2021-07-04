@@ -16,10 +16,10 @@ from flask import abort
 from flask import jsonify
 
 
-# bsbi = BlockedSortedBasedIndex("data/")
-# bsbi.construction()
-# bsbi.merge_blocks()
-# tf_idf()
+bsbi = BlockedSortedBasedIndex("data/")
+bsbi.construction()
+bsbi.merge_blocks()
+tf_idf()
 
 app = Flask(__name__)
 
