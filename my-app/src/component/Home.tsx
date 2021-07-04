@@ -29,6 +29,9 @@ const Home = () => {
         .then(response =>  response.json())
         .then((result) => {
             console.log(result)
+            console.log(result.sort(function (a: any, b: any): any {
+             return a[1] < b[1] 
+            }));
             setResult(result)
         })
         .catch(e => {
@@ -46,7 +49,7 @@ const Home = () => {
     {
         result && result.map((tweet, idx) => 
         <Box key={idx}>
-            <b>{idx+1}</b>. {tweet}
+            <b>{idx+1}</b>. {tweet[0]}
         </Box>)
         
     }

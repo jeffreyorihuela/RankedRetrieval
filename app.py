@@ -47,7 +47,7 @@ def get_tweets(scores):
             if tweet["retweeted"] == True or str(tweet["id"]) != tweet_id:
                 continue
             print(tweet["text"])
-            tweets.append(tweet["text"])
+            tweets.append((tweet["text"], scores[key]))
         nfile.close()
     return tweets
 
